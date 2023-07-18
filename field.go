@@ -34,7 +34,7 @@ func (field FieldState) String() string {
 // Returns the string representation of a field state for usage in a board view.
 // Assumes 3 character long field representations.
 //
-// If keyMapMode is set to true, it will return "[<fieldNumber>]" (e.g., "[3]"")
+// If keyMapMode is set to true, it will return "[<fieldNumber>]" (e.g., "[3]")
 // if the field is not taken and "   " otherwise.
 // If keyMapMode is set to false, it will return " <field.String()> " (e.g.,
 // " x ") if the field is taken and "   " otherwise.
