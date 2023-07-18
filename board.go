@@ -5,11 +5,19 @@ import (
 	"strings"
 )
 
+// 3x3 playing board.
 type Board struct {
 	fields      [3][3]FieldState
 	turnsPlayed int
 }
 
+// Return a string representation of the playing board. Each line is stored in
+// a separate string in the returned slice.
+//
+// If keyMapMode is set to true, numbers will be printed for fields that are not
+// yet taken and spaces otherwise.
+// If keyMapMode is set to false, the corresponding field states will be printed
+// for each field.
 func (board Board) stringRepresentation(keyMapMode bool) []string {
 	lines := make([]string, len(board.fields)*2-1)
 
@@ -34,18 +42,23 @@ func (board Board) stringRepresentation(keyMapMode bool) []string {
 	return lines
 }
 
+// String representation of the board. Shows the board state on the left and
+// available fields and thier numbers for selection on the right.
 func (board Board) String() string {
 	var strBuilder strings.Builder
 	boardStrings := board.stringRepresentation(false)
 	keyStrings := board.stringRepresentation(true)
 
 	for i := 0; i < len(boardStrings); i++ {
-		strBuilder.WriteString(fmt.Sprintf("%s     %s\n", boardStrings[i], keyStrings[i]))
+		line := fmt.Sprintf("%s     %s\n", boardStrings[i], keyStrings[i])
+		strBuilder.WriteString(line)
 	}
 
 	return strBuilder.String()
 }
 
+// Set a field to a given state. Returns an error if there is no field for the
+// given field number or if the field is already taken.
 func (board *Board) Set(fieldNumber int, state FieldState) error {
 	if fieldNumber < 0 || fieldNumber > 9 {
 		return fmt.Errorf("%d is not a field number", fieldNumber)
@@ -63,6 +76,9 @@ func (board *Board) Set(fieldNumber int, state FieldState) error {
 	return nil
 }
 
+// Calculate whether the game is already finished. If it is, and the game is not
+// tied, return the field state matching the winning player (x or o), otherwise
+// None.
 func (board Board) GameFinished() (bool, FieldState) {
 RowLoop:
 	for _, row := range board.fields {
