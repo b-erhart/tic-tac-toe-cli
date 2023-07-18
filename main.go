@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"math/rand"
 	"os"
 	"strconv"
+	"strings"
 )
 
 func initTurn() FieldState {
@@ -17,22 +19,17 @@ func initTurn() FieldState {
 }
 
 func readSelect() (int, error) {
-	var input string
-	_, err := fmt.Scanln(&input)
-
-	if err != nil && err.Error() != "unexpected newline" && err.Error() != "expected newline" {
-		fmt.Printf("Unable to read input, exiting. (%v)\n", err)
-		os.Exit(1)
-	}
+	reader := bufio.NewReader(os.Stdin)
+	input, err := reader.ReadString('\n')
 
 	if err != nil {
-		return 0, errors.New("invalid input")
+		return 0, errors.New("unable to read input")
 	}
 
-	field, err := strconv.Atoi(input)
+	field, err := strconv.Atoi(strings.TrimSpace(input))
 
 	if err != nil {
-		return 0, errors.New("invalid input")
+		return 0, errors.New("not a valid number")
 	}
 
 	return field, nil
@@ -66,7 +63,8 @@ func main() {
 		selectedField, err := readSelect()
 
 		if err != nil {
-			fmt.Println("Invlid input. Please enter one number.")
+			fmt.Printf("Error: invlid input (%s)\n", err.Error())
+			fmt.Println("Please enter one of the available numbers")
 			continue
 		}
 
